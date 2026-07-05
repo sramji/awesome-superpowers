@@ -11,10 +11,10 @@ Claude Code: rigor passes on your specs and plans, a mandatory code-review gate,
 structured end-of-session reflection, and a pattern for large multi-chunk work.
 
 > **Not an "Awesome List."** Despite the `awesome-` name, this is a *tool kit* of
-> Claude Code skills — not a curated list of links.
+> Claude Code skills, not a curated list of links.
 
-These skills **extend** Superpowers; they don't replace it. All git/worktree/
-code-review mechanics are deferred to `superpowers:*` skills.
+These skills **extend** Superpowers; they do not replace it. All git, worktree,
+and code-review mechanics are deferred to `superpowers:*` skills.
 
 ## Quick start (you already run Superpowers)
 
@@ -26,7 +26,7 @@ git clone https://github.com/sramji/awesome-superpowers
 bash awesome-superpowers/install.sh /path/to/your/project
 ```
 
-…or from inside your project directory:
+Or, from inside your project directory:
 
 ```bash
 bash /path/to/awesome-superpowers/install.sh
@@ -38,7 +38,7 @@ invoking the **awesome-brainstorming** skill.
 
 ## Don't have Superpowers yet?
 
-Install it first — the kit's skills invoke it.
+Install it first; the kit's skills invoke it.
 
 Recommended (official marketplace):
 
@@ -59,8 +59,8 @@ Then follow the Quick start above.
 
 Both hit the same root `install.sh`:
 
-1. **Clone** — `git clone …`, then run `install.sh`.
-2. **Release archive** — download `awesome-superpowers-<version>.tar.gz` (or the
+1. **Clone.** Run `git clone`, then run `install.sh`.
+2. **Release archive.** Download `awesome-superpowers-<version>.tar.gz` (or the
    GitHub "Source code" zip) from the Releases page, expand it, and run
    `install.sh` from the expanded directory.
 
@@ -76,7 +76,7 @@ Not needed for a `git clone`.
 
 Developed and tested on **WSL2** (Ubuntu userland on Windows 11). CI additionally
 runs the test suites on GitHub's `ubuntu-latest`. macOS, native Linux, and other
-platforms are **untested** — **PRs adding platform coverage are welcome.** See
+platforms are **untested**; **PRs adding platform coverage are welcome.** See
 [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Requirements
@@ -96,14 +96,14 @@ platforms are **untested** — **PRs adding platform coverage are welcome.** See
 
 ## What each skill does
 
-- **awesome-brainstorming** — runs Superpowers brainstorming, then a single
+- **awesome-brainstorming**: runs Superpowers brainstorming, then a single
   fresh-subagent rigor pass that strengthens the spec before you plan against it.
-- **awesome-writing-plans** — runs Superpowers writing-plans, then a ≤3-round
-  rigor loop that closes failure-mode gaps before execution.
-- **finishing-with-review** — gates every branch on a code review before it merges.
-- **end-of-session-reflection** — harvests learnings and routes them to durable
+- **awesome-writing-plans**: runs Superpowers writing-plans, then up to three
+  rounds of rigor that close failure-mode gaps before execution.
+- **finishing-with-review**: gates every branch on a code review before it merges.
+- **end-of-session-reflection**: harvests learnings and routes them to durable
   homes (created if absent) so knowledge survives between sessions.
-- **autonomous-chunk-execution** — breaks large multi-file work into independently
+- **autonomous-chunk-execution**: breaks large multi-file work into independently
   reviewable chunks with a shared tracker.
 
 See [`docs/the-chain.md`](docs/the-chain.md) for how they chain together.
@@ -117,10 +117,10 @@ bash install.sh /path/to/your/project --force
 ```
 
 If you already have a personal skill named like a kit skill, `--force` first
-moves it to `your-project/.claude/skills-backup-<timestamp>/` — it is never
+moves it to `your-project/.claude/skills-backup-<timestamp>/`; it is never
 deleted.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Attribution to Superpowers is in
+MIT. See [`LICENSE`](LICENSE). Attribution to Superpowers is in
 [`NOTICE`](NOTICE).
