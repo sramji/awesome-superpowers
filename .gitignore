@@ -1,0 +1,7 @@
+.superpowers/
+docs/design/
+.DS_Store
+*.swp
+# release build artifacts (produced in CI)
+awesome-superpowers-*.tar.gz
+awesome-superpowers-*.tar.gz.sha256

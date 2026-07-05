@@ -1,0 +1,16 @@
+name: ci
+on:
+  push:
+    branches: ['**']
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: validate (xref, manifest, front-matter, hygiene)
+        run: bash tests/validate.sh
+      - name: install tests
+        run: bash tests/test-install.sh
+      - name: branch-detection tests
+        run: bash tests/test-branch-detection.sh

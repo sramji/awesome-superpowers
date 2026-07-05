@@ -1,0 +1,10 @@
+awesome-superpowers
+Copyright 2026 Sam Ramji
+
+This project is an SDLC skill kit that extends the Superpowers plugin for
+Claude Code (https://github.com/obra/superpowers) by Jesse Vincent (obra).
+
+The kit's skills invoke Superpowers skills (e.g. superpowers:brainstorming,
+superpowers:writing-plans) rather than copying their text. Superpowers is an
+independent project under its own license; this project neither vendors nor
+modifies it. Install Superpowers separately (see README).

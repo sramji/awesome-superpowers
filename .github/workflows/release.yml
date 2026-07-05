@@ -1,0 +1,53 @@
+name: release
+on:
+  push:
+    tags:
+      - 'v*'
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: run test suites
+        run: |
+          bash tests/validate.sh
+          bash tests/test-install.sh
+          bash tests/test-branch-detection.sh
+
+      - name: derive and verify version
+        run: |
+          VER=$(head -1 VERSION | awk '{print $2}')
+          TAG="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VER  tag=$TAG"
+          [ "$VER" = "$TAG" ] || { echo "version/tag mismatch: VERSION=$VER tag=$TAG"; exit 1; }
+          echo "VER=$VER" >> "$GITHUB_ENV"
+
+      - name: build tarball (top-level prefix; git archive excludes untracked/.git)
+        run: |
+          PREFIX="awesome-superpowers-$VER"
+          TARBALL="$PREFIX.tar.gz"
+          git archive --format=tar.gz --prefix="$PREFIX/" -o "$TARBALL" HEAD
+          sha256sum "$TARBALL" > "$TARBALL.sha256"
+          echo "TARBALL=$TARBALL" >> "$GITHUB_ENV"
+
+      - name: smoke test the built artifact
+        run: |
+          top=$(tar tzf "$TARBALL" | head -1)
+          case "$top" in
+            awesome-superpowers-$VER/*) echo "prefix OK: $top" ;;
+            *) echo "tarbomb / wrong prefix: $top"; exit 1 ;;
+          esac
+          tmp=$(mktemp -d); tar xzf "$TARBALL" -C "$tmp"
+          proj=$(mktemp -d); mkdir -p "$proj/.claude"
+          bash "$tmp/awesome-superpowers-$VER/install.sh" "$proj"
+          n=$(find "$proj/.claude/skills" -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l)
+          [ "$n" -eq 5 ] || { echo "expected 5 skills, got $n"; exit 1; }
+          sha256sum -c "$TARBALL.sha256"
+
+      - name: publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "$TARBALL" "$TARBALL.sha256" --generate-notes
