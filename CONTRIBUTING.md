@@ -18,14 +18,14 @@ CI runs the same three on `ubuntu-latest` for every push and PR.
 
 Developed and tested on **WSL2** (Ubuntu userland on Windows 11). CI runs on
 GitHub's `ubuntu-latest`. macOS, native Linux, and other platforms are
-**untested** — the suites assume GNU coreutils / bash (e.g. `xargs -r`, some
+**untested**; the suites assume GNU coreutils / bash (e.g. `xargs -r`, some
 `grep` behaviors), so BSD/macOS users may hit differences. **PRs adding platform
 coverage are very welcome.**
 
 ## Notes
 
 - The kit skills are `SKILL.md` files under `skills/`. Keep each directory name
-  equal to its front-matter `name:` — `tests/validate.sh` enforces this.
+  equal to its front-matter `name:`; `tests/validate.sh` enforces this.
 - Don't hardcode machine-specific absolute home paths (use `$HOME` or `~`
   instead) in shipped files; the hygiene check rejects them. (This very line
   avoids such hardcoded paths for exactly that reason.)

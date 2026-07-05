@@ -3,7 +3,7 @@
 ```
 awesome-brainstorming ──(Pass A rigor)──► awesome-writing-plans ──(Pass B loop)──►
   superpowers:executing-plans ──► finishing-with-review ──►
-    [superpowers:requesting-code-review + receiving-code-review ×1–2] ──►
+    [superpowers:requesting-code-review + receiving-code-review x1-2] ──►
       end-of-session-reflection ──► superpowers:finishing-a-development-branch
 ```
 
