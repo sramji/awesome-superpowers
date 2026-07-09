@@ -7,11 +7,11 @@ description: Use when starting creative/design work in a project — wraps super
 
 ## Overview
 
-Project-level wrapper for `superpowers:brainstorming` that adds a single fresh-subagent rigor pass after the spec is written and before user spec review. The pass asks "what realistic failure modes does this design need to defend against?" and absorbs the answers into the spec silently — the user sees one polished diff in the existing user-review step.
+Project-level wrapper for `superpowers:brainstorming` that adds a single fresh-subagent rigor pass after the spec is written and before user spec review. The pass asks "what realistic failure modes does this design need to defend against?" and integrates the answers into the spec, reporting a one-line summary in chat — the user reviews the full, strengthened spec in the existing user-review step.
 
 **Announce at start:** "I'm using the awesome-brainstorming skill — brainstorm with a test-rigor pass before plan handoff."
 
-**Core principle:** Run upstream brainstorming → Pass A rigor review → spec absorbed silently → user reviews stronger spec → handoff to awesome-writing-plans.
+**Core principle:** Run upstream brainstorming → Pass A rigor review → gaps integrated + one-line summary in chat → user reviews stronger spec → handoff to awesome-writing-plans.
 
 ## The Process
 
@@ -22,7 +22,7 @@ digraph awesome_brainstorming {
     written [label="Spec written" shape=box];
     self_review [label="Upstream Spec Self-Review\n(inline checklist)" shape=box];
     idempotency [label="Pass A already run\non this spec?" shape=diamond];
-    pass_a [label="Step 2: Pass A\nDispatch subagent → integrate silently" shape=box];
+    pass_a [label="Step 2: Pass A\nDispatch subagent → integrate findings" shape=box];
     user_review [label="Step 3: User reviews spec\n(existing brainstorming step)" shape=box];
     handoff [label="Step 4: Invoke\nawesome-writing-plans" shape=doublecircle];
 
@@ -87,7 +87,7 @@ Return:
 | "No critical gaps" | Note "Pass A complete, no spec changes needed" in chat. Proceed to Step 3. |
 | Gap list with suggested additions | Continue below. |
 
-**Integrate silently:**
+**Integrate the findings:**
 
 For each suggested addition, edit the spec file to absorb it. Typical edits:
 
@@ -95,7 +95,7 @@ For each suggested addition, edit the spec file to absorb it. Typical edits:
 - Add a new bullet under an existing design section if the gap is design-level (not test-level).
 - Add a new section if the gap doesn't fit existing structure (e.g., `## Risks` if missing).
 
-**Do not surface the raw gap list to the user.** The user sees the polished spec in Step 3.
+**Report the pass in one line in chat** (e.g., "Pass A found 3 gaps: added Testing bullets for concurrent-write and empty-input cases, plus a Risks section") rather than pasting the subagent's raw output. The user reviews the full, integrated spec in Step 3 — nothing is withheld; the one-liner just keeps chat noise down between review steps.
 
 **Commit the changes:**
 
@@ -133,7 +133,7 @@ Invoke `awesome-writing-plans` (the project-level override of `superpowers:writi
 ## Red Flags
 
 - Running Pass A before upstream brainstorming's Spec Self-Review (out of order).
-- Surfacing the subagent's raw gap list to the user instead of integrating silently.
+- Pasting the subagent's raw gap list into chat instead of integrating it into the spec and reporting a one-line summary.
 - Forgetting the `Pass A rigor review` idempotency marker in the commit message — causes Pass A to re-run if the session resumes.
 - Looping Pass A (it is single-shot by design).
 - Treating the spec as locked after Pass A — the user-review step is still authoritative.
