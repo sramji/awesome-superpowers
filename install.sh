@@ -68,4 +68,4 @@ echo "Installed ${#SKILLS[@]} skills into $DEST:"
 printf '  - %s\n' "${SKILLS[@]}"
 echo
 echo "Next: restart Claude Code (or run /skills) and confirm the awesome-* skills appear."
-echo "Then start work by invoking the awesome-brainstorming skill."
+echo "When you start your next piece of work, ask Claude to use the awesome-brainstorming skill."
