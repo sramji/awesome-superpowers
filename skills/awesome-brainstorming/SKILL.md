@@ -7,11 +7,17 @@ description: Use when starting creative/design work in a project — wraps super
 
 ## Overview
 
-Project-level wrapper for `superpowers:brainstorming` that adds a single fresh-subagent rigor pass after the spec is written and before user spec review. The pass asks "what realistic failure modes does this design need to defend against?" and integrates the answers into the spec, reporting a one-line summary in chat — the user reviews the full, strengthened spec in the existing user-review step.
+Project-level wrapper for `superpowers:brainstorming` that adds a single fresh-subagent rigor pass after the spec is written and before user spec review. The pass asks "what realistic failure modes does this design need to defend against?" and integrates the answers into the spec, reporting a one-line summary in chat — the user reviews the full, strengthened spec, rendered in chat, in the user-review step.
 
 **Announce at start:** "I'm using the awesome-brainstorming skill — brainstorm with a test-rigor pass before plan handoff."
 
 **Core principle:** Run upstream brainstorming → Pass A rigor review → gaps integrated + one-line summary in chat → user reviews stronger spec → handoff to awesome-writing-plans.
+
+## Questions Are Self-Contained
+
+Throughout this flow — upstream Step 1 clarifying questions included — the user can see exactly two things: your chat messages and the question dialog itself. File Write/Edit calls, commits, and subagent reports render as collapsed tool calls; their content never enters the user's view. A file path is a location, not content.
+
+So every question to the user (plain text or AskUserQuestion) is answerable from what the user can see: whatever document, section, approach, or diff the question refers to appears either in chat text — this turn or earlier — or in the question's own `options[].description`/`preview` fields, before the ask.
 
 ## The Process
 
@@ -23,7 +29,7 @@ digraph awesome_brainstorming {
     self_review [label="Upstream Spec Self-Review\n(inline checklist)" shape=box];
     idempotency [label="Pass A already run\non this spec?" shape=diamond];
     pass_a [label="Step 2: Pass A\nDispatch subagent → integrate findings" shape=box];
-    user_review [label="Step 3: User reviews spec\n(existing brainstorming step)" shape=box];
+    user_review [label="Step 3: User reviews spec\n(spec rendered in chat + approval ask)" shape=box];
     handoff [label="Step 4: Invoke\nawesome-writing-plans" shape=doublecircle];
 
     upstream -> written;
@@ -118,9 +124,22 @@ The commit message **must contain the string `Pass A rigor review`** — this is
 
 ### Step 3: User reviews spec
 
-This is the existing `superpowers:brainstorming` user-review step. The user sees one diff (the spec with Pass A integrations already applied). On approval, proceed to Step 4.
+This is the upstream `superpowers:brainstorming` user-review gate with the message shape made explicit — the upstream skill's one-line "Spec written and committed to `<path>`, please review" template is **replaced** by the following. Everything Pass A did reached the user as at most a one-line summary; the spec itself so far exists only in places the user cannot see (file edits, commits, the subagent report). So the review request is one message with two parts, in order:
 
-If the user requests changes, apply them to the spec and return to Step 3. Pass A does not re-run — it is single-shot per spec.
+1. **The spec, rendered in chat.** Read the spec file and post its full current contents in the chat message as markdown, introduced with the path.
+2. **The approval ask.** Then ask whether to proceed or change anything — plain text or AskUserQuestion.
+
+Template:
+
+> Pass A complete — the spec absorbed [N rigor additions / no changes]. Here is the full spec as committed to `<path>`:
+>
+> [full spec content, rendered as markdown]
+>
+> Anything you'd like changed before we write the implementation plan?
+
+On approval, proceed to Step 4.
+
+If the user requests changes, apply them to the spec, post the changed sections in chat, and repeat the approval ask. Pass A does not re-run — it is single-shot per spec.
 
 ### Step 4: Handoff to awesome-writing-plans
 
@@ -132,6 +151,7 @@ Invoke `awesome-writing-plans` (the project-level override of `superpowers:writi
 
 ## Red Flags
 
+- Asking for spec approval when the spec's content has never been posted in chat — "please review the spec at `<path>`" (with or without an AskUserQuestion) asks the user to approve a document they have never seen.
 - Running Pass A before upstream brainstorming's Spec Self-Review (out of order).
 - Pasting the subagent's raw gap list into chat instead of integrating it into the spec and reporting a one-line summary.
 - Forgetting the `Pass A rigor review` idempotency marker in the commit message — causes Pass A to re-run if the session resumes.
