@@ -155,7 +155,15 @@ The user's choice is recorded in the next plan commit message. Proceed to Step 3
 
 ### Step 3: Handoff to executing-plans
 
-Use the existing `superpowers:writing-plans` Execution Handoff section. Present the two execution options (Subagent-Driven recommended, Inline Execution) and proceed per user choice.
+This is the upstream `superpowers:writing-plans` Execution Handoff with the message shape made explicit — the upstream one-liner ("Plan complete and saved to `<path>`. Which approach?") is **replaced** by the following. The user can see only chat messages and question dialogs; the plan file, Pass B commits, and subagent reports are all invisible to them, so the handoff is one message with two parts, in order:
+
+1. **The plan digest, rendered in chat.** Read the plan file and post:
+   - The task list — each task's number, title, and one-line deliverable.
+   - The `## Deferred Risks` section verbatim, if present.
+   - One line on what Pass B did (rounds run, gaps closed vs. deferred), with the plan path.
+2. **The execution-choice ask.** Then present the two upstream options (Subagent-Driven recommended, Inline Execution) and proceed per user choice.
+
+The same rule holds for any other question this skill asks (the round-3 escalation included): whatever plan content, gap, or diff the question refers to appears in chat text before the ask — a file path is a location, not content.
 
 ## Re-runnability
 
@@ -167,6 +175,7 @@ Pass B can be re-invoked manually mid-execution if the user says something like 
 
 ## Red Flags
 
+- Asking "which execution approach?" (or any approval question) when no plan content has been posted in chat — "saved to `<path>`" shows the user a location, not the plan; post the Step 3 digest first.
 - Running Pass B before upstream writing-plans' Self-Review (out of order).
 - Treating `minor` gaps as round-terminating (they aren't).
 - Skipping commits between rounds — each round must be atomic and auditable.
